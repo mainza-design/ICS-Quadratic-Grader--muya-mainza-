@@ -1,5 +1,5 @@
 # ICS-Quadratic-Grader--muya-mainza-
-# Project Title Quqdratic-Grader 
+#  Quqdratic-Grader 
 
 ## What it does
 
