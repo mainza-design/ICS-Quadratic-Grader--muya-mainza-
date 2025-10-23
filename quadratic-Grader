@@ -1,25 +1,178 @@
-HTML Structure (<!DOCTYPE html>, <html>, <head>, <body>):
 
-It's a standard HTML5 document.
-The <head> section contains metadata (character set, viewport settings), the page title, and embedded CSS styling.
-The <body> section holds all the visible content and the JavaScript logic.
 
-CSS Styling (<style> tag in <head>):
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Page with Math & Grading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #eee;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            min-height: 30px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
 
-Includes basic styling for a clean and user-friendly layout.
-It defines styles for the body, containers, headings, labels, input fields, buttons, and result display areas, making the page visually organized.
+    <div class="container">
+        <h1>Web Page Functions</h1>
 
-Quadratic Equation Solver Section:
+        <h2>1. Quadratic Equation Solver</h2>
+        <p>Solve for x in $$ ax^2 + bx + c = 0 $$</p>
+        <div>
+            <label for="aValue">Enter a:</label>
+            <input type="number" id="aValue" value="1">
+        </div>
+        <div>
+            <label for="bValue">Enter b:</label>
+            <input type="number" id="bValue" value="-3">
+        </div>
+        <div>
+            <label for="cValue">Enter c:</label>
+            <input type="number" id="cValue" value="2">
+        </div>
+        <button onclick="solveQuadratic()">Solve Equation</button>
+        <div id="quadraticResult" class="result"></div>
+    </div>
 
-This part is enclosed in a div with the class container.
+    <div class="container">
+        <h2>2. Numeric Score to Letter Grade Converter</h2>
+        <p>Converts a numeric score (0-100) to a letter grade.</p>
+        <div>
+            <label for="scoreInput">Enter Score (0-100):</label>
+            <input type="number" id="scoreInput" min="0" max="100" value="78">
+        </div>
+        <button onclick="convertGrade()">Convert to Grade</button>
+        <div id="gradeResult" class="result"></div>
+    </div>
 
-Grade Converter Section:
+    <script>
+        function solveQuadratic() {
+            const a = parseFloat(document.getElementById('aValue').value);
+            const b = parseFloat(document.getElementById('bValue').value);
+            const c = parseFloat(document.getElementById('cValue').value);
+            const resultDiv = document.getElementById('quadraticResult');
+            resultDiv.innerHTML = ''; // Clear previous results
 
-Also enclosed in a div with the class container.
-It features an input field (<input type="number">) for entering a numeric score between 0 and 100.
+            if (isNaN(a) || isNaN(b) || isNaN(c)) {
+                resultDiv.innerHTML = '<span class="error">Please enter valid numbers for a, b, and c.</span>';
+                return;
+            }
 
-JavaScript Logic (<script> tag at the end of <body>):
+            if (a === 0) {
+                if (b === 0) {
+                    resultDiv.innerHTML = c === 0 ? 'Infinite solutions (0=0)' : 'No solution (e.g., 5=0)';
+                } else {
+                    const x = -c / b;
+                    resultDiv.innerHTML = `This is a linear equation. x = ${x.toFixed(4)}`;
+                }
+                return;
+            }
 
-Contains two main functions:
-solveQuadratic(): Reads a, b, c values, calculates the discriminant, and determines the real or complex roots, handling edge cases like linear equations or invalid inputs.
+            const discriminant = b * b - 4 * a * c;
 
+            if (discriminant > 0) {
+                const x1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const x2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                resultDiv.innerHTML = `Two distinct real roots: <br>x1 = ${x1.toFixed(4)}<br>x2 = ${x2.toFixed(4)}`;
+            } else if (discriminant === 0) {
+                const x = -b / (2 * a);
+                resultDiv.innerHTML = `One real root (repeated): <br>x = ${x.toFixed(4)}`;
+            } else {
+                const realPart = (-b / (2 * a)).toFixed(4);
+                const imaginaryPart = (Math.sqrt(Math.abs(discriminant)) / (2 * a)).toFixed(4);
+                resultDiv.innerHTML = `Two complex conjugate roots: <br>x1 = ${realPart} + ${imaginaryPart}i<br>x2 = ${realPart} - ${imaginaryPart}i`;
+            }
+        }
+
+        function convertGrade() {
+            const score = parseFloat(document.getElementById('scoreInput').value);
+            const resultDiv = document.getElementById('gradeResult');
+            resultDiv.innerHTML = ''; // Clear previous results
+
+            if (isNaN(score) || score < 0 || score > 100) {
+                resultDiv.innerHTML = '<span class="error">Please enter a valid score between 0 and 100.</span>';
+                return;
+            }
+
+            let grade;
+            if (score >= 85) {
+                grade = 'A+';
+            } else if (score >= 75) {
+                grade = 'A';
+            } else if (score >= 65) {
+                grade = 'B+';
+            } else if (score >= 60) {
+                grade = 'B';
+            } else if (score >= 55) {
+                grade = 'C+';
+            } else if (score >= 50) {
+                grade = 'C';
+            } else {
+                grade = 'D';
+            }
+            resultDiv.innerHTML = `The letter grade is: <strong>${grade}</strong>`;
+        }
+
+        // Run initial calculations on page load for default values
+        document.addEventListener('DOMContentLoaded', () => {
+            solveQuadratic();
+            convertGrade();
+        });
+    </script>
+
+</body>
+</html>
