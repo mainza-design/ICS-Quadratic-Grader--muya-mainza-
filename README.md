@@ -19,5 +19,5 @@ This project provides two core functionalities: it solves quadratic equations of
 
 
 
-*   [Optional: Instructions on how others can contribute to the project, e.g., "Pull requests are welcome."]
+*    For any contributions to the project requests are welcome.
 
